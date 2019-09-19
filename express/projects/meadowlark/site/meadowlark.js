@@ -9,6 +9,12 @@ const fortunes = [
 
 const app = express();
 
+app.use(function(req, res, next){
+    res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
+    next();
+});
+
+// 라우트 정의 코드
 app
     .use(express.static(__dirname + '/public'))
     .engine('handlebars', handlebars() ) // 핸들바 뷰 엔진 설정
