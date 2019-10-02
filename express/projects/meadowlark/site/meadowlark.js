@@ -26,8 +26,18 @@ app
         res.render('home');
     })
     .get('/about', function(req, res){
-        const randomFortune = fortunes[Math.floor(Math.random()*fortunes.length)];
-        res.render('about',{fortune : randomFortune});
+        res.render('about', {
+            fortunes: fortunes.getFortune(),
+            pageTestScript: '/qa/tests-about.js'
+        });
+        // const randomFortune = fortunes[Math.floor(Math.random()*fortunes.length)];
+        // res.render('about',{fortune : randomFortune});
+    })
+    .get('/tours/hood-river', function(req, res){
+        res.render('tours/hood-river');
+    })
+    .get('/tours/request-group-rate', function(req, res){
+        res.render('tours/request-group-rate');
     })
     .use(function(req, res, next){ // 404 폴백 핸들러 (미들웨어)
         res.status(404);
@@ -38,6 +48,8 @@ app
         res.status(500);
         res.render('500');
     });
+
+
 
 app.listen(app.get('port'), function(){
     console.log(`Express started on http://localhost: ${app.get('port')}; press Ctrl-C to terminate.`);
