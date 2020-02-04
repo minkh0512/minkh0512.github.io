@@ -1,1 +1,10 @@
 @charset "utf-8";
+.list__todo{}
+.list__todo .list-item{
+    position: relative;
+}
+.list__todo .list-item input[type="checkbox"]{}
+.list__todo .list-item .label{}
+.list__todo .list-item .box__button{
+    display: inline-block;
+}
