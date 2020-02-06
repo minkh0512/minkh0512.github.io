@@ -13,12 +13,13 @@ function paintTodoList(todoText){
             <input type="checkbox" id="" class="input__text" />
             <label for="" class="label">${todoText}</label>
             <div class="box__button">
-                <button type="button" class="button__modify" onclick=${deleteTodo(event)}><i class="fa fa-edit"></i><span class="for-a11y">수정</span></button>
+                <button type="button" class="button__modify" onclick="deleteTodo(event)"><i class="fa fa-edit"></i><span class="for-a11y">수정</span></button>
                 <button type="button" class="button__delete"><i class="fa fa-trash"></i><span class="for-a11y">삭제</span></button>
             </div>
         </li>`,
     );
-    console.log(buttonDelete);
+    todoInput.value = '';
+    todoInput.focus();
 }
 
 function handleSubmit(event){
