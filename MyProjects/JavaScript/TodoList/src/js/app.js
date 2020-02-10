@@ -45,10 +45,14 @@ function loadTodoList(){
 }
 function deleteTodo(event){
     const selectList = this.parentNode.parentNode;
-    const selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
+    const selectListIndex = Number(selectList.id.split('list-item')[1]);
     selectList.remove();
     localStorage.removeItem(todoList[selectListIndex]);
-    console.log(todoList);
+    const newTodoList = todoList.filter(function(todo){
+        return todo.id !== selectListIndex
+    });
+    todoList = newTodoList;
+    saveTodo();
 }
 function modifyTodo(event){
     console.log('modify')

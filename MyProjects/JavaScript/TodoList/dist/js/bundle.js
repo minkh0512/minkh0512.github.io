@@ -10302,10 +10302,14 @@ function loadTodoList() {
 
 function deleteTodo(event) {
   var selectList = this.parentNode.parentNode;
-  var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
+  var selectListIndex = Number(selectList.id.split('list-item')[1]);
   selectList.remove();
   localStorage.removeItem(todoList[selectListIndex]);
-  console.log(todoList);
+  var newTodoList = todoList.filter(function (todo) {
+    return todo.id !== selectListIndex;
+  });
+  todoList = newTodoList;
+  saveTodo();
 }
 
 function modifyTodo(event) {
