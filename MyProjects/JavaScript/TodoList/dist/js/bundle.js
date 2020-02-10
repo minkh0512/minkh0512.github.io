@@ -10269,24 +10269,57 @@ var todoForm = document.querySelector('.form__todo'),
     todoInput = todoForm.querySelector('.input__todo'),
     todoInputButton = todoForm.querySelector('.button__submit'),
     todoListWrap = todoForm.querySelector('.list__todo');
+var TODO_LIST = 'todoList';
+var todoList = [];
 
-function deleteTodo(event) {
-  console.log(event);
+function saveTodo() {
+  localStorage.setItem(TODO_LIST, JSON.stringify(todoList));
 }
 
-function paintTodoList(todoText) {
-  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\">\n            <input type=\"checkbox\" id=\"\" class=\"input__text\" />\n            <label for=\"\" class=\"label\">".concat(todoText, "</label>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\" onclick=\"deleteTodo(event)\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
+function paintTodo(todoText) {
+  var todoObject = {
+    'id': todoList.length + 1,
+    'text': todoText
+  };
+  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(todoObject.id, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(todoObject.id, "\" class=\"input__text\" />\n                <label for=\"todo").concat(todoObject.id, "\" class=\"label\"></label>\n            </div>\n            <span contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
+  document.querySelector("#list-item".concat(todoObject.id, " .button__modify")).addEventListener('click', modifyTodo);
+  document.querySelector("#list-item".concat(todoObject.id, " .button__delete")).addEventListener('click', deleteTodo);
+  todoList.push(todoObject);
   todoInput.value = '';
-  todoInput.focus();
+  saveTodo();
+}
+
+function loadTodoList() {
+  var todoList = localStorage.getItem(TODO_LIST);
+
+  if (todoList !== null) {
+    var parsedTodoList = JSON.parse(todoList);
+    parsedTodoList.forEach(function (todo) {
+      paintTodo(todo.text);
+    });
+  }
+}
+
+function deleteTodo(event) {
+  var selectList = this.parentNode.parentNode;
+  var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
+  selectList.remove();
+  localStorage.removeItem(todoList[selectListIndex]);
+  console.log(todoList);
+}
+
+function modifyTodo(event) {
+  console.log('modify');
 }
 
 function handleSubmit(event) {
   event.preventDefault();
   var inputValue = todoInput.value;
-  paintTodoList(inputValue);
+  paintTodo(inputValue);
 }
 
 function init() {
+  loadTodoList();
   todoForm.addEventListener('submit', handleSubmit);
   todoInputButton.addEventListener('click', handleSubmit);
 }

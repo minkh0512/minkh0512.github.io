@@ -62,6 +62,9 @@ a:hover {
 .list__todo .list-item {
   position: relative; }
 
+.list__todo .list-item .box__checkbox {
+  display: inline-block; }
+
 .list__todo .list-item .box__button {
   display: inline-block; }
 
