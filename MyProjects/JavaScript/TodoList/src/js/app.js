@@ -56,6 +56,7 @@ function modifyTodo(event){
 function handleSubmit(event){
     event.preventDefault();
     const inputValue = todoInput.value;
+    if(inputValue == ''){return}
     paintTodo(inputValue);
 }
 

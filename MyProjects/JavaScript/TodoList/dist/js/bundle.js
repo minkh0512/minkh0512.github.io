@@ -10315,6 +10315,11 @@ function modifyTodo(event) {
 function handleSubmit(event) {
   event.preventDefault();
   var inputValue = todoInput.value;
+
+  if (inputValue == '') {
+    return;
+  }
+
   paintTodo(inputValue);
 }
 
