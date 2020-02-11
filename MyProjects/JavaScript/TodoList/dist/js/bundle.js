@@ -10281,7 +10281,7 @@ function paintTodo(todoText) {
     'id': todoList.length + 1,
     'text': todoText
   };
-  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(todoObject.id, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(todoObject.id, "\" class=\"input__text\" />\n                <label for=\"todo").concat(todoObject.id, "\" class=\"label\"></label>\n            </div>\n            <span contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
+  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(todoObject.id, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(todoObject.id, "\" class=\"input__text\" />\n                <label for=\"todo").concat(todoObject.id, "\" class=\"label\"></label>\n            </div>\n            <span class=\"text__todo\" contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
   document.querySelector("#list-item".concat(todoObject.id, " .button__modify")).addEventListener('click', modifyTodo);
   document.querySelector("#list-item".concat(todoObject.id, " .button__delete")).addEventListener('click', deleteTodo);
   todoList.push(todoObject);
@@ -10300,7 +10300,7 @@ function loadTodoList() {
   }
 }
 
-function deleteTodo(event) {
+function deleteTodo() {
   var selectList = this.parentNode.parentNode;
   var selectListIndex = Number(selectList.id.split('list-item')[1]);
   selectList.remove();
@@ -10312,9 +10312,19 @@ function deleteTodo(event) {
   saveTodo();
 }
 
-function modifyTodo(event) {
-  console.log('modify');
+function modifyTodo() {
+  var selectList = this.parentNode.parentNode;
+  var dotoText = selectList.querySelector('.text__todo');
+  var dotoTextNode = dotoText.textContent;
+  dotoText.setAttribute('contenteditable', 'true');
+  dotoText.textContent = '';
+  dotoText.textContent = dotoTextNode;
+  dotoText.focus(dotoText);
 }
+
+function modifyTodoComplete(targetWrap) {}
+
+function modifyTodoCancel(targetWrap) {}
 
 function handleSubmit(event) {
   event.preventDefault();

@@ -21,7 +21,7 @@ function paintTodo(todoText){
                 <input type="checkbox" id="todo${todoObject.id}" class="input__text" />
                 <label for="todo${todoObject.id}" class="label"></label>
             </div>
-            <span contenteditable="false">${todoText}</span>
+            <span class="text__todo" contenteditable="false">${todoText}</span>
             <div class="box__button">
                 <button type="button" class="button__modify"><i class="fa fa-edit"></i><span class="for-a11y">수정</span></button>
                 <button type="button" class="button__delete"><i class="fa fa-trash"></i><span class="for-a11y">삭제</span></button>
@@ -43,7 +43,7 @@ function loadTodoList(){
         });
     }
 }
-function deleteTodo(event){
+function deleteTodo(){
     const selectList = this.parentNode.parentNode;
     const selectListIndex = Number(selectList.id.split('list-item')[1]);
     selectList.remove();
@@ -54,9 +54,19 @@ function deleteTodo(event){
     todoList = newTodoList;
     saveTodo();
 }
-function modifyTodo(event){
-    console.log('modify')
+function modifyTodo(){
+    const selectList = this.parentNode.parentNode;
+    const dotoText = selectList.querySelector('.text__todo');
+    const dotoTextNode = dotoText.textContent;
+    dotoText.setAttribute('contenteditable','true');
+    dotoText.textContent = '';
+    dotoText.textContent = dotoTextNode;
+    dotoText.focus(dotoText);
 }
+function modifyTodoComplete(targetWrap){
+
+}
+function modifyTodoCancel(targetWrap){}
 function handleSubmit(event){
     event.preventDefault();
     const inputValue = todoInput.value;
