@@ -10315,11 +10315,8 @@ function deleteTodo() {
 function modifyTodo() {
   var selectList = this.parentNode.parentNode;
   var dotoText = selectList.querySelector('.text__todo');
-  var dotoTextNode = dotoText.textContent;
   dotoText.setAttribute('contenteditable', 'true');
-  dotoText.textContent = '';
-  dotoText.textContent = dotoTextNode;
-  dotoText.focus(dotoText);
+  dotoText.focus();
 }
 
 function modifyTodoComplete(targetWrap) {}

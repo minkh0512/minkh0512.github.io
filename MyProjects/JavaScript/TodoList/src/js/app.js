@@ -57,11 +57,8 @@ function deleteTodo(){
 function modifyTodo(){
     const selectList = this.parentNode.parentNode;
     const dotoText = selectList.querySelector('.text__todo');
-    const dotoTextNode = dotoText.textContent;
     dotoText.setAttribute('contenteditable','true');
-    dotoText.textContent = '';
-    dotoText.textContent = dotoTextNode;
-    dotoText.focus(dotoText);
+    dotoText.focus();
 }
 function modifyTodoComplete(targetWrap){
 
