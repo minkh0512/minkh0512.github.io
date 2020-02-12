@@ -10316,7 +10316,9 @@ function modifyTodo() {
   var selectList = this.parentNode.parentNode;
   var dotoText = selectList.querySelector('.text__todo');
   dotoText.setAttribute('contenteditable', 'true');
-  dotoText.focus();
+  var selection = window.getSelection();
+  selection.selectAllChildren(dotoText);
+  selection.collapseToEnd();
 }
 
 function modifyTodoComplete(targetWrap) {}

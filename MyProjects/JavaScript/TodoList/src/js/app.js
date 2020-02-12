@@ -58,7 +58,9 @@ function modifyTodo(){
     const selectList = this.parentNode.parentNode;
     const dotoText = selectList.querySelector('.text__todo');
     dotoText.setAttribute('contenteditable','true');
-    dotoText.focus();
+    const selection = window.getSelection();
+    selection.selectAllChildren(dotoText);
+    selection.collapseToEnd();
 }
 function modifyTodoComplete(targetWrap){
 
