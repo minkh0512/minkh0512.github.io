@@ -11,3 +11,6 @@
 .list__todo .list-item .box__button{
     display: inline-block;
 }
+.list__todo .list-item.list-item--clear .text__todo{
+    text-decoration: underline;
+}

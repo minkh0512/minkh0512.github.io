@@ -24,11 +24,15 @@ function paintTodo(todoText){
             <span class="text__todo" contenteditable="false">${todoText}</span>
             <div class="box__button">
                 <button type="button" class="button__modify"><i class="fa fa-edit"></i><span class="for-a11y">수정</span></button>
+                <button type="button" class="button__complete"><i class="fa fa-check-circle"></i><span class="for-a11y">수정 완료</span></button>
+                <button type="button" class="button__cancel"><i class="fa fa-times-circle"></i><span class="for-a11y">수정 취소</span></button>
                 <button type="button" class="button__delete"><i class="fa fa-trash"></i><span class="for-a11y">삭제</span></button>
             </div>
         </li>`,
     );
     document.querySelector(`#list-item${todoObject.id} .button__modify`).addEventListener('click', modifyTodo);
+    document.querySelector(`#list-item${todoObject.id} .button__complete`).addEventListener('click', modifyTodoComplete);
+    document.querySelector(`#list-item${todoObject.id} .button__cancel`).addEventListener('click', modifyTodoCancel);
     document.querySelector(`#list-item${todoObject.id} .button__delete`).addEventListener('click', deleteTodo);
     todoList.push(todoObject);
     todoInput.value = '';
@@ -43,6 +47,20 @@ function loadTodoList(){
         });
     }
 }
+function modifyTodo(){
+    const selectList = this.parentNode.parentNode;
+    const dotoText = selectList.querySelector('.text__todo');
+    dotoText.setAttribute('contenteditable','true');
+    const selection = window.getSelection();
+    selection.selectAllChildren(dotoText);
+    selection.collapseToEnd();
+}
+function modifyTodoComplete(){
+
+}
+function modifyTodoCancel(){
+
+}
 function deleteTodo(){
     const selectList = this.parentNode.parentNode;
     const selectListIndex = Number(selectList.id.split('list-item')[1]);
@@ -54,18 +72,6 @@ function deleteTodo(){
     todoList = newTodoList;
     saveTodo();
 }
-function modifyTodo(){
-    const selectList = this.parentNode.parentNode;
-    const dotoText = selectList.querySelector('.text__todo');
-    dotoText.setAttribute('contenteditable','true');
-    const selection = window.getSelection();
-    selection.selectAllChildren(dotoText);
-    selection.collapseToEnd();
-}
-function modifyTodoComplete(targetWrap){
-
-}
-function modifyTodoCancel(targetWrap){}
 function handleSubmit(event){
     event.preventDefault();
     const inputValue = todoInput.value;
