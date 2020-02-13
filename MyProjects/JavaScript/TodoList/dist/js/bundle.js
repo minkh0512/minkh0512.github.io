@@ -10305,15 +10305,27 @@ function loadTodoList() {
 function modifyTodo() {
   var selectList = this.parentNode.parentNode;
   var dotoText = selectList.querySelector('.text__todo');
+  var buttonBox = selectList.querySelector('.box__button');
   dotoText.setAttribute('contenteditable', 'true');
   var selection = window.getSelection();
   selection.selectAllChildren(dotoText);
   selection.collapseToEnd();
+  buttonBox.classList.add('box__button--modify');
+  dotoText.addEventListener('blur', function (e) {
+    dotoText.setAttribute('contenteditable', 'false');
+    buttonBox.classList.remove('box__button--modify');
+  });
 }
 
 function modifyTodoComplete() {}
 
-function modifyTodoCancel() {}
+function modifyTodoCancel() {
+  var selectList = this.parentNode.parentNode;
+  var dotoText = selectList.querySelector('.text__todo');
+  var buttonBox = selectList.querySelector('.box__button');
+  dotoText.setAttribute('contenteditable', 'false');
+  buttonBox.classList.remove('box__button--modify');
+}
 
 function deleteTodo() {
   var selectList = this.parentNode.parentNode;

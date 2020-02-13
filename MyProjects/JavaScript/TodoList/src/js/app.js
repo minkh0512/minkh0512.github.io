@@ -50,16 +50,26 @@ function loadTodoList(){
 function modifyTodo(){
     const selectList = this.parentNode.parentNode;
     const dotoText = selectList.querySelector('.text__todo');
+    const buttonBox = selectList.querySelector('.box__button');
     dotoText.setAttribute('contenteditable','true');
     const selection = window.getSelection();
     selection.selectAllChildren(dotoText);
     selection.collapseToEnd();
+    buttonBox.classList.add('box__button--modify');
+    dotoText.addEventListener('blur', e => {
+        dotoText.setAttribute('contenteditable','false');
+        buttonBox.classList.remove('box__button--modify');
+    });
 }
 function modifyTodoComplete(){
 
 }
 function modifyTodoCancel(){
-
+    const selectList = this.parentNode.parentNode;
+    const dotoText = selectList.querySelector('.text__todo');
+    const buttonBox = selectList.querySelector('.box__button');
+    dotoText.setAttribute('contenteditable','false');
+    buttonBox.classList.remove('box__button--modify');
 }
 function deleteTodo(){
     const selectList = this.parentNode.parentNode;
