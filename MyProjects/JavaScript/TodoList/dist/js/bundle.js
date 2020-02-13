@@ -10311,20 +10311,32 @@ function modifyTodo() {
   selection.selectAllChildren(dotoText);
   selection.collapseToEnd();
   buttonBox.classList.add('box__button--modify');
-  dotoText.addEventListener('blur', function (e) {
-    dotoText.setAttribute('contenteditable', 'false');
-    buttonBox.classList.remove('box__button--modify');
-  });
 }
 
-function modifyTodoComplete() {}
-
-function modifyTodoCancel() {
+function modifyTodoComplete() {
+  var prevTodoList = localStorage.getItem(TODO_LIST);
+  var parsedTodoList = JSON.parse(prevTodoList);
   var selectList = this.parentNode.parentNode;
+  var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
   var dotoText = selectList.querySelector('.text__todo');
   var buttonBox = selectList.querySelector('.box__button');
   dotoText.setAttribute('contenteditable', 'false');
   buttonBox.classList.remove('box__button--modify');
+  parsedTodoList[selectListIndex].text = dotoText.textContent;
+  todoList = parsedTodoList;
+  saveTodo();
+}
+
+function modifyTodoCancel() {
+  var prevTodoList = localStorage.getItem(TODO_LIST);
+  var parsedTodoList = JSON.parse(prevTodoList);
+  var selectList = this.parentNode.parentNode;
+  var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
+  var dotoText = selectList.querySelector('.text__todo');
+  var buttonBox = selectList.querySelector('.box__button');
+  dotoText.setAttribute('contenteditable', 'false');
+  buttonBox.classList.remove('box__button--modify');
+  dotoText.textContent = parsedTodoList[selectListIndex].text;
 }
 
 function deleteTodo() {
