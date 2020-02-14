@@ -10276,13 +10276,29 @@ function saveTodo() {
   localStorage.setItem(TODO_LIST, JSON.stringify(todoList));
 }
 
-function paintTodo(todoText) {
+function checkClearTimer() {
+  localStorage.setItem('clearTodo', new Date().getDate());
+}
+
+function paintTodo(todoText, totoDone) {
   var todoObject = {
     'id': todoList.length + 1,
-    'text': todoText
+    'text': todoText,
+    'done': totoDone ? true : false
   };
   var listIndex = todoObject.id;
-  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(listIndex, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(listIndex, "\" class=\"input__text\" />\n                <label for=\"todo").concat(listIndex, "\" class=\"label\"></label>\n            </div>\n            <span class=\"text__todo\" contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__complete\"><i class=\"fa fa-check-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uC644\uB8CC</span></button>\n                <button type=\"button\" class=\"button__cancel\"><i class=\"fa fa-times-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uCDE8\uC18C</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
+  var listDone = '';
+  var listCheck = '';
+
+  if (todoObject.done) {
+    listDone = 'list-item--done', listCheck = 'checked';
+  } else {
+    listDone = '';
+    listCheck = '';
+  }
+
+  ;
+  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item ".concat(listDone, "\" id=\"list-item").concat(listIndex, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(listIndex, "\" class=\"input__text\" ").concat(listCheck, " />\n                <label for=\"todo").concat(listIndex, "\" class=\"label\"></label>\n            </div>\n            <span class=\"text__todo\" contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__complete\"><i class=\"fa fa-check-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uC644\uB8CC</span></button>\n                <button type=\"button\" class=\"button__cancel\"><i class=\"fa fa-times-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uCDE8\uC18C</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
   document.querySelector("#todo".concat(listIndex)).addEventListener('change', inputChangekFunc(listIndex));
   document.querySelector("#list-item".concat(listIndex, " .button__modify")).addEventListener('click', modifyTodoFunc(listIndex));
   document.querySelector("#list-item".concat(listIndex, " .button__complete")).addEventListener('click', modifyTodoCompleteFunc(listIndex));
@@ -10294,12 +10310,26 @@ function paintTodo(todoText) {
 }
 
 function loadTodoList() {
+  var prevDate = Number(localStorage.getItem('clearTodo'));
+  checkClearTimer();
+  var currentDate = new Date().getDate();
   var todoList = localStorage.getItem(TODO_LIST);
 
   if (todoList !== null) {
     var parsedTodoList = JSON.parse(todoList);
+    var currenttodoList = [];
+
+    if (prevDate !== currentDate) {
+      parsedTodoList.forEach(function (v) {
+        if (!v.done) {
+          currenttodoList.push(v);
+        }
+      });
+      parsedTodoList = currenttodoList;
+    }
+
     parsedTodoList.forEach(function (todo) {
-      paintTodo(todo.text);
+      paintTodo(todo.text, todo.done);
     });
   }
 }
@@ -10311,9 +10341,22 @@ var inputChangekFunc = function inputChangekFunc(listIndex) {
 };
 
 function inputChange(listIndex) {
+  var prevTodoList = localStorage.getItem(TODO_LIST);
+  var parsedTodoList = JSON.parse(prevTodoList);
   var selectList = document.querySelector("#list-item".concat(listIndex));
+  var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
   var selectInput = selectList.querySelector("#todo".concat(listIndex));
-  selectInput.checked ? selectList.classList.add('list-item--done') : selectList.classList.remove('list-item--done');
+
+  if (selectInput.checked) {
+    selectList.classList.add('list-item--done');
+    parsedTodoList[selectListIndex].done = true;
+  } else {
+    selectList.classList.remove('list-item--done');
+    parsedTodoList[selectListIndex].done = false;
+  }
+
+  todoList = parsedTodoList;
+  saveTodo();
 }
 
 var modifyTodoFunc = function modifyTodoFunc(listIndex) {
@@ -10388,6 +10431,8 @@ function deleteTodo(listIndex) {
   todoList = newTodoList;
   saveTodo();
 }
+
+function clearTodo() {}
 
 function handleSubmit(event) {
   event.preventDefault();

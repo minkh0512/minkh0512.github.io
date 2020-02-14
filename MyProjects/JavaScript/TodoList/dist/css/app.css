@@ -127,7 +127,8 @@ a:hover {
 
 .list__todo .list-item.list-item--done .text__todo {
   color: #4c4c4c;
-  text-decoration: line-through; }
+  text-decoration: line-through;
+  opacity: 0.5; }
 
 .box__input-todo {
   position: fixed;

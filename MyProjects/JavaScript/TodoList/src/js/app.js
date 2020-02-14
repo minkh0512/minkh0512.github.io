@@ -9,17 +9,30 @@ let todoList = [];
 function saveTodo(){
     localStorage.setItem(TODO_LIST, JSON.stringify(todoList));
 }
-function paintTodo(todoText){
+function checkClearTimer(){
+    localStorage.setItem('clearTodo', new Date().getDate());
+}
+function paintTodo(todoText, totoDone){
     const todoObject = {
         'id' : todoList.length + 1,
         'text' : todoText,
+        'done' : totoDone ? true : false,
     }
     const listIndex = todoObject.id;
+    let listDone = '';
+    let listCheck = '';
+    if(todoObject.done){
+        listDone = 'list-item--done',
+        listCheck = 'checked'
+    }else{
+        listDone = ''
+        listCheck = ''
+    };
     todoListWrap.insertAdjacentHTML(
         'beforeend',
-        `<li class="list-item" id="list-item${listIndex}">
+        `<li class="list-item ${listDone}" id="list-item${listIndex}">
             <div class="box__checkbox">
-                <input type="checkbox" id="todo${listIndex}" class="input__text" />
+                <input type="checkbox" id="todo${listIndex}" class="input__text" ${listCheck} />
                 <label for="todo${listIndex}" class="label"></label>
             </div>
             <span class="text__todo" contenteditable="false">${todoText}</span>
@@ -41,19 +54,42 @@ function paintTodo(todoText){
     saveTodo();
 }
 function loadTodoList(){
+    const prevDate = Number(localStorage.getItem('clearTodo'));
+    checkClearTimer();
+    const currentDate = new Date().getDate();
     const todoList = localStorage.getItem(TODO_LIST);
     if(todoList !== null){
-        const parsedTodoList = JSON.parse(todoList);
+        let parsedTodoList = JSON.parse(todoList);
+        let currenttodoList = [];
+        if(prevDate !== currentDate){
+            parsedTodoList.forEach(function(v){
+                if(!v.done){
+                    currenttodoList.push(v);
+                }
+            })
+            parsedTodoList = currenttodoList;
+        }
         parsedTodoList.forEach(function(todo){
-            paintTodo(todo.text);
+            paintTodo(todo.text,todo.done);
         });
     }
 }
 const inputChangekFunc = listIndex => () => inputChange(listIndex);
 function inputChange(listIndex){
+    const prevTodoList = localStorage.getItem(TODO_LIST);
+    const parsedTodoList = JSON.parse(prevTodoList);
     const selectList = document.querySelector(`#list-item${listIndex}`);
+    const selectListIndex = Number(selectList.id.split('list-item')[1]) -1;
     const selectInput = selectList.querySelector(`#todo${listIndex}`);
-    selectInput.checked ? selectList.classList.add('list-item--done') : selectList.classList.remove('list-item--done');
+    if(selectInput.checked){
+        selectList.classList.add('list-item--done');
+        parsedTodoList[selectListIndex].done = true;
+    }else{
+        selectList.classList.remove('list-item--done');
+        parsedTodoList[selectListIndex].done = false;
+    }
+    todoList = parsedTodoList;
+    saveTodo();
 }
 const modifyTodoFunc = listIndex => () => modifyTodo(listIndex);
 function modifyTodo(listIndex){
@@ -103,6 +139,9 @@ function deleteTodo(listIndex){
     });
     todoList = newTodoList;
     saveTodo();
+}
+function clearTodo(){
+    
 }
 function handleSubmit(event){
     event.preventDefault();
