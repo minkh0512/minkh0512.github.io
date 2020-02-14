@@ -10283,6 +10283,7 @@ function paintTodo(todoText) {
   };
   var listIndex = todoObject.id;
   todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(listIndex, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(listIndex, "\" class=\"input__text\" />\n                <label for=\"todo").concat(listIndex, "\" class=\"label\"></label>\n            </div>\n            <span class=\"text__todo\" contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__complete\"><i class=\"fa fa-check-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uC644\uB8CC</span></button>\n                <button type=\"button\" class=\"button__cancel\"><i class=\"fa fa-times-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uCDE8\uC18C</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
+  document.querySelector("#todo".concat(listIndex)).addEventListener('change', inputChangekFunc(listIndex));
   document.querySelector("#list-item".concat(listIndex, " .button__modify")).addEventListener('click', modifyTodoFunc(listIndex));
   document.querySelector("#list-item".concat(listIndex, " .button__complete")).addEventListener('click', modifyTodoCompleteFunc(listIndex));
   document.querySelector("#list-item".concat(listIndex, " .button__cancel")).addEventListener('click', modifyTodoCancelFunc(listIndex));
@@ -10301,6 +10302,18 @@ function loadTodoList() {
       paintTodo(todo.text);
     });
   }
+}
+
+var inputChangekFunc = function inputChangekFunc(listIndex) {
+  return function () {
+    return inputChange(listIndex);
+  };
+};
+
+function inputChange(listIndex) {
+  var selectList = document.querySelector("#list-item".concat(listIndex));
+  var selectInput = selectList.querySelector("#todo".concat(listIndex));
+  selectInput.checked ? selectList.classList.add('list-item--done') : selectList.classList.remove('list-item--done');
 }
 
 var modifyTodoFunc = function modifyTodoFunc(listIndex) {

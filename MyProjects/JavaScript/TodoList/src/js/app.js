@@ -31,6 +31,7 @@ function paintTodo(todoText){
             </div>
         </li>`,
     );
+    document.querySelector(`#todo${listIndex}`).addEventListener('change', inputChangekFunc(listIndex));
     document.querySelector(`#list-item${listIndex} .button__modify`).addEventListener('click', modifyTodoFunc(listIndex));
     document.querySelector(`#list-item${listIndex} .button__complete`).addEventListener('click', modifyTodoCompleteFunc(listIndex));
     document.querySelector(`#list-item${listIndex} .button__cancel`).addEventListener('click', modifyTodoCancelFunc(listIndex));
@@ -47,6 +48,12 @@ function loadTodoList(){
             paintTodo(todo.text);
         });
     }
+}
+const inputChangekFunc = listIndex => () => inputChange(listIndex);
+function inputChange(listIndex){
+    const selectList = document.querySelector(`#list-item${listIndex}`);
+    const selectInput = selectList.querySelector(`#todo${listIndex}`);
+    selectInput.checked ? selectList.classList.add('list-item--done') : selectList.classList.remove('list-item--done');
 }
 const modifyTodoFunc = listIndex => () => modifyTodo(listIndex);
 function modifyTodo(listIndex){
