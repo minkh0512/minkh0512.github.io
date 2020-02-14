@@ -140,9 +140,6 @@ function deleteTodo(listIndex){
     todoList = newTodoList;
     saveTodo();
 }
-function clearTodo(){
-    
-}
 function handleSubmit(event){
     event.preventDefault();
     const inputValue = todoInput.value;
