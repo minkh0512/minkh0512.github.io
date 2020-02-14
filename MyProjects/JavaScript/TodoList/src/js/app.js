@@ -14,12 +14,13 @@ function paintTodo(todoText){
         'id' : todoList.length + 1,
         'text' : todoText,
     }
+    const listIndex = todoObject.id;
     todoListWrap.insertAdjacentHTML(
         'beforeend',
-        `<li class="list-item" id="list-item${todoObject.id}">
+        `<li class="list-item" id="list-item${listIndex}">
             <div class="box__checkbox">
-                <input type="checkbox" id="todo${todoObject.id}" class="input__text" />
-                <label for="todo${todoObject.id}" class="label"></label>
+                <input type="checkbox" id="todo${listIndex}" class="input__text" />
+                <label for="todo${listIndex}" class="label"></label>
             </div>
             <span class="text__todo" contenteditable="false">${todoText}</span>
             <div class="box__button">
@@ -30,10 +31,10 @@ function paintTodo(todoText){
             </div>
         </li>`,
     );
-    document.querySelector(`#list-item${todoObject.id} .button__modify`).addEventListener('click', modifyTodo);
-    document.querySelector(`#list-item${todoObject.id} .button__complete`).addEventListener('click', modifyTodoComplete);
-    document.querySelector(`#list-item${todoObject.id} .button__cancel`).addEventListener('click', modifyTodoCancel);
-    document.querySelector(`#list-item${todoObject.id} .button__delete`).addEventListener('click', deleteTodo);
+    document.querySelector(`#list-item${listIndex} .button__modify`).addEventListener('click', modifyTodoFunc(listIndex));
+    document.querySelector(`#list-item${listIndex} .button__complete`).addEventListener('click', modifyTodoCompleteFunc(listIndex));
+    document.querySelector(`#list-item${listIndex} .button__cancel`).addEventListener('click', modifyTodoCancelFunc(listIndex));
+    document.querySelector(`#list-item${listIndex} .button__delete`).addEventListener('click', deleteTodoFunc(listIndex));
     todoList.push(todoObject);
     todoInput.value = '';
     saveTodo();
@@ -47,8 +48,9 @@ function loadTodoList(){
         });
     }
 }
-function modifyTodo(){
-    const selectList = this.parentNode.parentNode;
+const modifyTodoFunc = listIndex => () => modifyTodo(listIndex);
+function modifyTodo(listIndex){
+    const selectList = document.querySelector(`#list-item${listIndex}`);
     const dotoText = selectList.querySelector('.text__todo');
     const buttonBox = selectList.querySelector('.box__button');
     dotoText.setAttribute('contenteditable','true');
@@ -57,10 +59,11 @@ function modifyTodo(){
     selection.collapseToEnd();
     buttonBox.classList.add('box__button--modify');
 }
-function modifyTodoComplete(){
+const modifyTodoCompleteFunc = listIndex => () => modifyTodoComplete(listIndex);
+function modifyTodoComplete(listIndex){
     const prevTodoList = localStorage.getItem(TODO_LIST);
     const parsedTodoList = JSON.parse(prevTodoList);
-    const selectList = this.parentNode.parentNode;
+    const selectList = document.querySelector(`#list-item${listIndex}`);
     const selectListIndex = Number(selectList.id.split('list-item')[1]) -1;
     const dotoText = selectList.querySelector('.text__todo');
     const buttonBox = selectList.querySelector('.box__button');
@@ -70,10 +73,11 @@ function modifyTodoComplete(){
     todoList = parsedTodoList;
     saveTodo();
 }
-function modifyTodoCancel(){
+const modifyTodoCancelFunc = listIndex => () => modifyTodoCancel(listIndex);
+function modifyTodoCancel(listIndex){
     const prevTodoList = localStorage.getItem(TODO_LIST);
     const parsedTodoList = JSON.parse(prevTodoList);
-    const selectList = this.parentNode.parentNode;
+    const selectList = document.querySelector(`#list-item${listIndex}`);
     const selectListIndex = Number(selectList.id.split('list-item')[1]) -1;
     const dotoText = selectList.querySelector('.text__todo');
     const buttonBox = selectList.querySelector('.box__button');
@@ -81,8 +85,9 @@ function modifyTodoCancel(){
     buttonBox.classList.remove('box__button--modify');
     dotoText.textContent = parsedTodoList[selectListIndex].text;
 }
-function deleteTodo(){
-    const selectList = this.parentNode.parentNode;
+const deleteTodoFunc = listIndex => () => deleteTodo(listIndex);
+function deleteTodo(listIndex){
+    const selectList = document.querySelector(`#list-item${listIndex}`);
     const selectListIndex = Number(selectList.id.split('list-item')[1]);
     selectList.remove();
     localStorage.removeItem(todoList[selectListIndex]);
@@ -98,11 +103,9 @@ function handleSubmit(event){
     if(inputValue == ''){return}
     paintTodo(inputValue);
 }
-
 function init(){
     loadTodoList();
     todoForm.addEventListener('submit', handleSubmit);
     todoInputButton.addEventListener('click', handleSubmit);
 }
-
 init();

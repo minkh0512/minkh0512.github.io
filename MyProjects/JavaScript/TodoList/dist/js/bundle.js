@@ -10281,11 +10281,12 @@ function paintTodo(todoText) {
     'id': todoList.length + 1,
     'text': todoText
   };
-  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(todoObject.id, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(todoObject.id, "\" class=\"input__text\" />\n                <label for=\"todo").concat(todoObject.id, "\" class=\"label\"></label>\n            </div>\n            <span class=\"text__todo\" contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__complete\"><i class=\"fa fa-check-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uC644\uB8CC</span></button>\n                <button type=\"button\" class=\"button__cancel\"><i class=\"fa fa-times-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uCDE8\uC18C</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
-  document.querySelector("#list-item".concat(todoObject.id, " .button__modify")).addEventListener('click', modifyTodo);
-  document.querySelector("#list-item".concat(todoObject.id, " .button__complete")).addEventListener('click', modifyTodoComplete);
-  document.querySelector("#list-item".concat(todoObject.id, " .button__cancel")).addEventListener('click', modifyTodoCancel);
-  document.querySelector("#list-item".concat(todoObject.id, " .button__delete")).addEventListener('click', deleteTodo);
+  var listIndex = todoObject.id;
+  todoListWrap.insertAdjacentHTML('beforeend', "<li class=\"list-item\" id=\"list-item".concat(listIndex, "\">\n            <div class=\"box__checkbox\">\n                <input type=\"checkbox\" id=\"todo").concat(listIndex, "\" class=\"input__text\" />\n                <label for=\"todo").concat(listIndex, "\" class=\"label\"></label>\n            </div>\n            <span class=\"text__todo\" contenteditable=\"false\">").concat(todoText, "</span>\n            <div class=\"box__button\">\n                <button type=\"button\" class=\"button__modify\"><i class=\"fa fa-edit\"></i><span class=\"for-a11y\">\uC218\uC815</span></button>\n                <button type=\"button\" class=\"button__complete\"><i class=\"fa fa-check-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uC644\uB8CC</span></button>\n                <button type=\"button\" class=\"button__cancel\"><i class=\"fa fa-times-circle\"></i><span class=\"for-a11y\">\uC218\uC815 \uCDE8\uC18C</span></button>\n                <button type=\"button\" class=\"button__delete\"><i class=\"fa fa-trash\"></i><span class=\"for-a11y\">\uC0AD\uC81C</span></button>\n            </div>\n        </li>"));
+  document.querySelector("#list-item".concat(listIndex, " .button__modify")).addEventListener('click', modifyTodoFunc(listIndex));
+  document.querySelector("#list-item".concat(listIndex, " .button__complete")).addEventListener('click', modifyTodoCompleteFunc(listIndex));
+  document.querySelector("#list-item".concat(listIndex, " .button__cancel")).addEventListener('click', modifyTodoCancelFunc(listIndex));
+  document.querySelector("#list-item".concat(listIndex, " .button__delete")).addEventListener('click', deleteTodoFunc(listIndex));
   todoList.push(todoObject);
   todoInput.value = '';
   saveTodo();
@@ -10302,8 +10303,14 @@ function loadTodoList() {
   }
 }
 
-function modifyTodo() {
-  var selectList = this.parentNode.parentNode;
+var modifyTodoFunc = function modifyTodoFunc(listIndex) {
+  return function () {
+    return modifyTodo(listIndex);
+  };
+};
+
+function modifyTodo(listIndex) {
+  var selectList = document.querySelector("#list-item".concat(listIndex));
   var dotoText = selectList.querySelector('.text__todo');
   var buttonBox = selectList.querySelector('.box__button');
   dotoText.setAttribute('contenteditable', 'true');
@@ -10313,10 +10320,16 @@ function modifyTodo() {
   buttonBox.classList.add('box__button--modify');
 }
 
-function modifyTodoComplete() {
+var modifyTodoCompleteFunc = function modifyTodoCompleteFunc(listIndex) {
+  return function () {
+    return modifyTodoComplete(listIndex);
+  };
+};
+
+function modifyTodoComplete(listIndex) {
   var prevTodoList = localStorage.getItem(TODO_LIST);
   var parsedTodoList = JSON.parse(prevTodoList);
-  var selectList = this.parentNode.parentNode;
+  var selectList = document.querySelector("#list-item".concat(listIndex));
   var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
   var dotoText = selectList.querySelector('.text__todo');
   var buttonBox = selectList.querySelector('.box__button');
@@ -10327,10 +10340,16 @@ function modifyTodoComplete() {
   saveTodo();
 }
 
-function modifyTodoCancel() {
+var modifyTodoCancelFunc = function modifyTodoCancelFunc(listIndex) {
+  return function () {
+    return modifyTodoCancel(listIndex);
+  };
+};
+
+function modifyTodoCancel(listIndex) {
   var prevTodoList = localStorage.getItem(TODO_LIST);
   var parsedTodoList = JSON.parse(prevTodoList);
-  var selectList = this.parentNode.parentNode;
+  var selectList = document.querySelector("#list-item".concat(listIndex));
   var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
   var dotoText = selectList.querySelector('.text__todo');
   var buttonBox = selectList.querySelector('.box__button');
@@ -10339,8 +10358,14 @@ function modifyTodoCancel() {
   dotoText.textContent = parsedTodoList[selectListIndex].text;
 }
 
-function deleteTodo() {
-  var selectList = this.parentNode.parentNode;
+var deleteTodoFunc = function deleteTodoFunc(listIndex) {
+  return function () {
+    return deleteTodo(listIndex);
+  };
+};
+
+function deleteTodo(listIndex) {
+  var selectList = document.querySelector("#list-item".concat(listIndex));
   var selectListIndex = Number(selectList.id.split('list-item')[1]);
   selectList.remove();
   localStorage.removeItem(todoList[selectListIndex]);
