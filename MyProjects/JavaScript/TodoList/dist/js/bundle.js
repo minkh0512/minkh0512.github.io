@@ -10432,8 +10432,6 @@ function deleteTodo(listIndex) {
   saveTodo();
 }
 
-function clearTodo() {}
-
 function handleSubmit(event) {
   event.preventDefault();
   var inputValue = todoInput.value;
