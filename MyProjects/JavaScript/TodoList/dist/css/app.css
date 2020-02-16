@@ -62,6 +62,9 @@ a:hover {
   margin-top: 3px;
   background-color: #f5f5f5; }
 
+.list__todo .list-item.list-item--delete {
+  display: none; }
+
 .list__todo .list-item:first-child {
   margin-top: 0; }
 

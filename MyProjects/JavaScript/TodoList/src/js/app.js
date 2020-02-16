@@ -12,11 +12,15 @@ function saveTodo(){
 function checkClearTimer(){
     localStorage.setItem('clearTodo', new Date().getDate());
 }
-function paintTodo(todoText, totoDone){
+function paintTodo(todoText, todoDone, todoDelete){
     const todoObject = {
         'id' : todoList.length + 1,
         'text' : todoText,
-        'done' : totoDone ? true : false,
+        'done' : todoDone ? true : false,
+        'delete' : todoDelete ? true : false,
+    }
+    if(todoObject.delete){
+        return
     }
     const listIndex = todoObject.id;
     let listDone = '';
@@ -70,7 +74,7 @@ function loadTodoList(){
             parsedTodoList = currenttodoList;
         }
         parsedTodoList.forEach(function(todo){
-            paintTodo(todo.text,todo.done);
+            paintTodo(todo.text,todo.done, todo.delete);
         });
     }
 }
@@ -130,14 +134,13 @@ function modifyTodoCancel(listIndex){
 }
 const deleteTodoFunc = listIndex => () => deleteTodo(listIndex);
 function deleteTodo(listIndex){
+    const prevTodoList = localStorage.getItem(TODO_LIST);
+    const parsedTodoList = JSON.parse(prevTodoList);
     const selectList = document.querySelector(`#list-item${listIndex}`);
-    const selectListIndex = Number(selectList.id.split('list-item')[1]);
-    selectList.remove();
-    localStorage.removeItem(todoList[selectListIndex]);
-    const newTodoList = todoList.filter(function(todo){
-        return todo.id !== selectListIndex
-    });
-    todoList = newTodoList;
+    const selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
+    selectList.classList.add('list-item--delete');
+    parsedTodoList[selectListIndex].delete = true;
+    todoList = parsedTodoList;
     saveTodo();
 }
 function handleSubmit(event){

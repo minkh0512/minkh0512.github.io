@@ -10280,12 +10280,18 @@ function checkClearTimer() {
   localStorage.setItem('clearTodo', new Date().getDate());
 }
 
-function paintTodo(todoText, totoDone) {
+function paintTodo(todoText, todoDone, todoDelete) {
   var todoObject = {
     'id': todoList.length + 1,
     'text': todoText,
-    'done': totoDone ? true : false
+    'done': todoDone ? true : false,
+    'delete': todoDelete ? true : false
   };
+
+  if (todoObject["delete"]) {
+    return;
+  }
+
   var listIndex = todoObject.id;
   var listDone = '';
   var listCheck = '';
@@ -10329,7 +10335,7 @@ function loadTodoList() {
     }
 
     parsedTodoList.forEach(function (todo) {
-      paintTodo(todo.text, todo.done);
+      paintTodo(todo.text, todo.done, todo["delete"]);
     });
   }
 }
@@ -10421,14 +10427,13 @@ var deleteTodoFunc = function deleteTodoFunc(listIndex) {
 };
 
 function deleteTodo(listIndex) {
+  var prevTodoList = localStorage.getItem(TODO_LIST);
+  var parsedTodoList = JSON.parse(prevTodoList);
   var selectList = document.querySelector("#list-item".concat(listIndex));
-  var selectListIndex = Number(selectList.id.split('list-item')[1]);
-  selectList.remove();
-  localStorage.removeItem(todoList[selectListIndex]);
-  var newTodoList = todoList.filter(function (todo) {
-    return todo.id !== selectListIndex;
-  });
-  todoList = newTodoList;
+  var selectListIndex = Number(selectList.id.split('list-item')[1]) - 1;
+  selectList.classList.add('list-item--delete');
+  parsedTodoList[selectListIndex]["delete"] = true;
+  todoList = parsedTodoList;
   saveTodo();
 }
 
