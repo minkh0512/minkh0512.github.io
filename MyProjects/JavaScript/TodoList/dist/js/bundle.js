@@ -10352,9 +10352,11 @@ function dragHandler(listIndex) {
   document.querySelector("#list-item".concat(listIndex)).addEventListener('dragover', handleDragOver, false);
   document.querySelector("#list-item".concat(listIndex)).addEventListener('dragleave', handleDragLeave, false);
   document.querySelector("#list-item".concat(listIndex)).addEventListener('drop', handleDrop, false);
+  document.querySelector("#list-item".concat(listIndex)).addEventListener('dragend', handleEnd, false);
 }
 
 function handleDragStart(e) {
+  console.log('start');
   dragData = this;
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.outerHTML);
@@ -10384,15 +10386,15 @@ function handleDrop(e) {
   if (dragData != this) {
     var dropHtml = e.dataTransfer.getData('text/html');
     this.insertAdjacentHTML('beforebegin', dropHtml);
+    console.log('drop', dropHtml);
     var listIndex = Number(this.previousSibling.id.split('list-item')[1]);
-    console.log(listIndex);
+    document.querySelector('.list-item--body').remove();
     dragHandlerFunc(listIndex);
-    dragData.remove();
-  } else {
-    this.classList.remove('list-item--body');
   }
+}
 
-  return false;
+function handleEnd(e) {
+  this.classList.remove('list-item--body');
 }
 
 var inputChangekFunc = function inputChangekFunc(listIndex) {

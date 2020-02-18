@@ -12,6 +12,9 @@
 .list__todo .list-item.list-item--hover{
     border-top: 2px solid #cdcdcd;
 }
+.list__todo .list-item.list-item--body{
+    border-top: 0;
+}
 .list__todo .list-item:first-child{
     margin-top: 0;
 }
