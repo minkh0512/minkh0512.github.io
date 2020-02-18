@@ -9,6 +9,9 @@
 .list__todo .list-item.list-item--delete{
     display: none;
 }
+.list__todo .list-item.list-item--hover{
+    border-top: 2px solid #cdcdcd;
+}
 .list__todo .list-item:first-child{
     margin-top: 0;
 }

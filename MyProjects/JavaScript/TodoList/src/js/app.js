@@ -34,7 +34,7 @@ function paintTodo(todoText, todoDone, todoDelete){
     };
     todoListWrap.insertAdjacentHTML(
         'beforeend',
-        `<li class="list-item ${listDone}" id="list-item${listIndex}">
+        `<li class="list-item ${listDone}" id="list-item${listIndex}" draggable="true">
             <div class="box__checkbox">
                 <input type="checkbox" id="todo${listIndex}" class="input__text" ${listCheck} />
                 <label for="todo${listIndex}" class="label"></label>
@@ -53,6 +53,7 @@ function paintTodo(todoText, todoDone, todoDelete){
     document.querySelector(`#list-item${listIndex} .button__complete`).addEventListener('click', modifyTodoCompleteFunc(listIndex));
     document.querySelector(`#list-item${listIndex} .button__cancel`).addEventListener('click', modifyTodoCancelFunc(listIndex));
     document.querySelector(`#list-item${listIndex} .button__delete`).addEventListener('click', deleteTodoFunc(listIndex));
+    dragHandlerFunc(listIndex);
     todoList.push(todoObject);
     todoInput.value = '';
     saveTodo();
@@ -77,6 +78,47 @@ function loadTodoList(){
             paintTodo(todo.text,todo.done, todo.delete);
         });
     }
+}
+let dragData = null;
+const dragHandlerFunc = (listIndex ) => dragHandler(listIndex);
+function dragHandler(listIndex){
+    document.querySelector(`#list-item${listIndex}`).addEventListener('dragstart', handleDragStart, false);
+    document.querySelector(`#list-item${listIndex}`).addEventListener('dragover', handleDragOver, false);
+    document.querySelector(`#list-item${listIndex}`).addEventListener('dragleave', handleDragLeave, false);
+    document.querySelector(`#list-item${listIndex}`).addEventListener('drop', handleDrop, false);
+}
+function handleDragStart(e){
+    dragData = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
+    this.classList.add('list-item--body');
+}
+function handleDragOver(e){
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    this.classList.add('list-item--hover');
+    e.dataTransfer.dropEffect = 'move';
+}
+function handleDragLeave(e){
+    this.classList.remove('list-item--hover');
+}
+function handleDrop(e){
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    this.classList.remove('list-item--hover');
+    if(dragData!=this){
+        let dropHtml = e.dataTransfer.getData('text/html');
+        this.insertAdjacentHTML('beforebegin',dropHtml);
+        const listIndex = Number(this.previousSibling.id.split('list-item')[1]);
+        console.log(listIndex);
+        dragHandlerFunc(listIndex);
+        dragData.remove();
+    }else{
+        this.classList.remove('list-item--body');
+    }
+    return false;
 }
 const inputChangekFunc = listIndex => () => inputChange(listIndex);
 function inputChange(listIndex){
