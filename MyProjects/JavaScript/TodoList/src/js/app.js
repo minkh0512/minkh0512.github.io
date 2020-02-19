@@ -89,10 +89,9 @@ function dragHandler(listIndex){
     document.querySelector(`#list-item${listIndex}`).addEventListener('dragend', handleEnd, false);
 }
 function handleDragStart(e){
-    console.log('start');
     dragData = this;
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', this.outerHTML);
+    e.dataTransfer.setData('text', this.outerHTML);
     this.classList.add('list-item--body');
 }
 function handleDragOver(e){
@@ -111,12 +110,15 @@ function handleDrop(e){
     }
     this.classList.remove('list-item--hover');
     if(dragData!=this){
-        let dropHtml = e.dataTransfer.getData('text/html');
+        const prevTodoList = localStorage.getItem(TODO_LIST);
+        const parsedTodoList = JSON.parse(prevTodoList);
+        let dropHtml = e.dataTransfer.getData('text');
         this.insertAdjacentHTML('beforebegin',dropHtml);
-        console.log('drop',dropHtml)
         const listIndex = Number(this.previousSibling.id.split('list-item')[1]);
-        document.querySelector('.list-item--body').remove();
+        document.querySelector('.list-item--body').parentNode.removeChild(document.querySelector('.list-item--body'));
         dragHandlerFunc(listIndex);
+        console.log(dragData,this);
+        console.log(parsedTodoList[0]);
     }
 }
 function handleEnd(e){
