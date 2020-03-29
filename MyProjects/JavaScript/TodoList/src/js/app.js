@@ -117,8 +117,15 @@ function handleDrop(e){
         const listIndex = Number(this.previousSibling.id.split('list-item')[1]);
         document.querySelector('.list-item--body').parentNode.removeChild(document.querySelector('.list-item--body'));
         dragHandlerFunc(listIndex);
-        console.log(dragData,this);
-        console.log(parsedTodoList[0]);
+        const newTodo = '';
+        [...document.querySelectorAll('.list-item')].map((v)=>{
+            console.log(v.id);
+        })
+        console.log(parsedTodoList);
+        
+        // parsedTodoList.map((v)=>{
+        //     console.log(v)
+        // })
     }
 }
 function handleEnd(e){
