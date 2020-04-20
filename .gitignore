@@ -134,3 +134,4 @@ jspm_packages
 
 # etc
 package-lock.json
+/zeroCho/NodeBird/client/package-lock.json
