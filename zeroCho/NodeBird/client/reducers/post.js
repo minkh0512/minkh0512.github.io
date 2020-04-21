@@ -120,13 +120,13 @@ export default ( state = initialState, action ) => {
 		case ADD_COMMENT_SUCCESS: {
 			const postIndex = state.mainPosts.findIndex(v => v.id === action.data.postId);
 			const post = state.mainPosts[postIndex];
-			const Commtents = [...post.Comments, dummyComment];
+			const Comments = [...post.Comments, dummyComment];
 			const mainPosts = [...state.mainPosts];
 			mainPosts[postIndex] = {...post, Comments};
 			return {
 				...state,
 				isAddingComment: false,
-				mainPosts: [dummyPost, ...state.mainPosts],
+				mainPosts,
 				commentAdded: true,
 			}
 		}
