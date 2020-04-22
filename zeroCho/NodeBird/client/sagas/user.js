@@ -24,16 +24,14 @@ function* watchLogin() {
   yield takeEvery(LOG_IN_REQUEST, login);
 }
 
-function signUpAPI() {
-  return axios.post('/signUp');
+function signUpAPI(signUpData) {
+  return axios.post('http://localhost:5082/api/user/', signUpData);
 }
-function* signUp() {
+function* signUp(action) {
   try {
-    // yield call(signUpAPI);
-    yield delay(2000);
-    throw new Error('errrrrrrrr...');
+    yield call(signUpAPI, action.data);
     yield put({
-      type: SIGN_UP_SUCCESS
+      type: SIGN_UP_SUCCESS,
     });
   } catch (e) {
     console.error(e);
