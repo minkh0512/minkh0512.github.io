@@ -2,18 +2,18 @@ import { all, fork, takeLatest, takeEvery, call, put, delay } from 'redux-saga/e
 import axios from 'axios';
 import { LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from '../reducers/user';
 
+axios.defaults.baseURL = 'http://localhost:5082/api';
 
 function loginAPI() {
-  return axios.post('/login');
+  return axios.post('/user/login');
 }
-function* login() {
+function* login(action) {
   try {
-    // yield call(loginAPI);
-    yield delay(2000);
-    yield put({
+    yield call(loginAPI, action.data);
+    yield put({ // put은 dispatch와 동일
       type: LOG_IN_SUCCESS,
     });
-  } catch (e) {
+  } catch (e) { // loginAPI 실패
     console.error(e);
     yield put({
       type: LOG_IN_FAILURE,
@@ -25,7 +25,7 @@ function* watchLogin() {
 }
 
 function signUpAPI(signUpData) {
-  return axios.post('http://localhost:5082/api/user/', signUpData);
+  return axios.post('/user/', signUpData);
 }
 function* signUp(action) {
   try {
