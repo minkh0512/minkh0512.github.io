@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { Input, Button, Form } from 'antd';
 import Link from 'next/link';
-import { useInput } from '../pages/signup';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInput } from '../pages/signup'; // TODO: util 폴더로 옮기기
 import { LOG_IN_REQUEST } from '../reducers/user';
 
 const LoginForm = () => {
