@@ -42,8 +42,8 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
   passport.authenticate('local', (err, user, info) => {
     console.log(err, user, info);
     if(err) {
-      console.error(e);
-      return next(e);
+      console.error(err);
+      return next(err);
     }
     if(info) {
       return res.status(401).send(info.reason);
@@ -54,7 +54,7 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
       }
       const filteredUser = Object.assign({}, user.toJSON());
       delete filteredUser.password;
-      return res.json(usfilteredUserer);
+      return res.json(filteredUser);
     });
   })(req, res, next);
 });
