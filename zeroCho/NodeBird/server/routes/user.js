@@ -35,9 +35,13 @@ router.post('/', async (req, res, next) => {  // POST /api/user 회원가입
 router.get('/:id', (req, res) => { // 남의 정보를 가져오는 것 ex) /3
 
 });
-router.post('/logout', (req, res) => { // /api/user/logout
 
+router.post('/logout', (req, res) => { // /api/user/logout
+  req.logout();
+  req.session.destroy();
+  res.send('logout 성공');
 });
+
 router.post('/login', (req, res, next) => { // POST /api/user/login
   passport.authenticate('local', (err, user, info) => {
     console.log(err, user, info);
@@ -48,16 +52,36 @@ router.post('/login', (req, res, next) => { // POST /api/user/login
     if(info) {
       return res.status(401).send(info.reason);
     }
-    return req.login(user, (loginErr) => {
-      if(loginErr) {
-        return next(loginErr);
+    return req.login(user, async (loginErr) => {
+      try {
+        if(loginErr) {
+          return next(loginErr);
+        }
+        const fullUser = await db.User.findOne({
+          where: { id: user.id },
+          include: [{
+            model: db.Post,
+            as: 'Posts',
+            attributes: ['id'],
+          }, {
+            model: db.User,
+            as: 'Followings',
+            attributes: ['id'],
+          }, {
+            model: db.User,
+            as: 'Followers',
+            attributes: ['id'],
+          }],
+          attributes: ['id', 'nickname', 'userId'],
+        });
+        return res.json(fullUser);
+      } catch (e) {
+        next(e);
       }
-      const filteredUser = Object.assign({}, user.toJSON());
-      delete filteredUser.password;
-      return res.json(filteredUser);
     });
   })(req, res, next);
 });
+
 router.get('/:id/follow', (req, res) => {
 
 });

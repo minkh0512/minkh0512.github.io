@@ -20,7 +20,10 @@ passportConfig();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(expressSession({
   resave: false,
@@ -29,7 +32,8 @@ app.use(expressSession({
   cookie: {
     httpOnly: true, // cookie를 자바스크립트로 접근못하게 막음
     secure: false, // https 사용시 true
-  }
+  },
+  name: 'rnbc',
 }));
 app.use(passport.initialize());
 app.use(passport.session());
