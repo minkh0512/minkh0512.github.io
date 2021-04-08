@@ -1,15 +1,74 @@
 'use strict';
 
 const CARROT_SIZE = 80;
+const CARROT_COUNT = 5;
+const BUG_COUNT = 5;
+const GAME_DURATION_SEC = 5;
+
 const field = document.querySelector('.game__field');
 const fieldRect = field.getBoundingClientRect();
-function initGame(){
+const gameButton = document.querySelector('.game__button');
+const gameTimer = document.querySelector('.game__timer');
+const gameScore = document.querySelector('.game__score');
+
+let started = false;
+let score = 0;
+let timer = undefined;
+
+gameButton.addEventListener('click', () => {
+    started ? stopGame() : startGame();
+    started = !started;
+});
+
+function startGame() {
+    initGame();
+    showStopButton();
+    showTimerAndScore();
+    startGameTimer();
+}
+
+function stopGame() {
+
+}
+
+function showStopButton() {
+    const icon = gameButton.querySelector('.fa-play');
+    icon.classList.add('fa-stop');
+    icon.classList.remove('fa-play');
+}
+
+function showTimerAndScore() {
+    gameTimer.style.visibility = 'visible';
+    gameScore.style.visibility = 'visible';
+}
+
+function startGameTimer() {
+    let remainingTimeSec = GAME_DURATION_SEC;
+    updateTimerText(remainingTimeSec);
+    timer = setInterval(() => {
+        if(remainingTimeSec <=0) {
+            clearInterval(timer);
+            return;
+        }
+        updateTimerText(--remainingTimeSec);
+    }, 1000);
+}
+
+function updateTimerText(time) {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    gameTimer.innerText = `${minutes} : ${seconds}`;
+}
+
+function initGame() {
+    field.innerHTML = '';
+    gameScore.innerText = CARROT_COUNT;
     // 벌레와 당근을 생성한뒤 field에 추가해줌
     addItems('carrot', 5, 'img/carrot.png');
     addItems('bug', 5, 'img/bug.png');
 }
 
-function addItems(className, count, imgPath){
+function addItems(className, count, imgPath) {
     const x1 = 0;
     const y1 = 0;
     const x2 = fieldRect.width - CARROT_SIZE;
@@ -22,15 +81,12 @@ function addItems(className, count, imgPath){
         item.style.position = 'absolute';
         const x = randomNubmer(x1, x2);
         const y = randomNubmer(y1, y2);
-        console.log(x,y);
         item.style.left = `${x}px`;
         item.style.top = `${y}px`;
         field.appendChild(item);
     }
 }
 
-function randomNubmer(min, max){
+function randomNubmer(min, max) {
     return Math.random() * (max - min) + min;
 }
-
-initGame();
