@@ -3,11 +3,6 @@
 import PopUp from './popup.js';
 import Game from './game.js';
 
-const gameFinishBanner = new PopUp();
-gameFinishBanner.setClickListener(() => {
-    game.start();
-});
-
 const game = new Game(3,3,3);
 game.setGameStopListener(reason => {
     console.log(reason);
@@ -26,4 +21,9 @@ game.setGameStopListener(reason => {
             throw new Error('not valid reason');
     }
     gameFinishBanner.showWidthText(message);
+});
+
+const gameFinishBanner = new PopUp();
+gameFinishBanner.setClickListener(() => {
+    game.start();
 });
