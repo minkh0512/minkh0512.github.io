@@ -29,7 +29,6 @@ function onItemClick(item) {
         return;
     }
     if(item === 'carrot') {
-        console.log(1111)
         score++;
         updateScoreBoard();
         if(score === CARROT_COUNT){
@@ -70,7 +69,7 @@ function finishGame(win) {
     } else {
         sound.playBug();
     }
-    stopSound(bgSound);
+    sound.stopBg();
     gameFinishBanner.showWidthText(win ? 'YOU WON!' : 'YOU LOST!');
     stopGameTimer();
 }
